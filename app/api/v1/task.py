@@ -30,3 +30,8 @@ def update_task(task_form: TaskForm, db: Session = Depends(get_db), user: User =
 @router.delete('/{task_id}')
 def delete_task(task_id, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     return task_service.delete_task(db, task_id)
+
+
+@router.get('/run/{task_id}')
+def run_task(task_id, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    return task_service.run_task(db, task_id)

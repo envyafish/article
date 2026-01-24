@@ -5,8 +5,6 @@ from app.api.deps import get_current_user
 from app.api.services import task_service
 from app.core.database import get_db
 from app.models import User
-from app.models.task import Task
-from app.schemas.response import success
 from app.schemas.task import TaskForm, TaskLogFilter
 
 router = APIRouter()
@@ -40,3 +38,8 @@ def run_task(task_id, db: Session = Depends(get_db), user: User = Depends(get_cu
 @router.post('/log/search')
 def page_task_log(params: TaskLogFilter, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     return task_service.page_task(db, params)
+
+
+@router.get('/funcs')
+def list_func(user: User = Depends(get_current_user)):
+    return task_service.list_func()

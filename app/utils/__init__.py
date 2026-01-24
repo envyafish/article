@@ -4,6 +4,7 @@ from typing import Dict, get_origin, get_args, Union, Any
 from urllib.parse import urlparse
 
 
+
 def dict_trans_obj(source: Dict, target: object):
     if not source or not target:
         return
@@ -53,6 +54,7 @@ def get_host_and_port(url):
 
     return host, port
 
+
 def serialize_result(result: Any) -> str:
     """
     将 dict / list[dict] 安全序列化为字符串，用于数据库存储
@@ -61,8 +63,8 @@ def serialize_result(result: Any) -> str:
     try:
         return json.dumps(
             result,
-            ensure_ascii=False,   # 支持中文
-            default=str,          # datetime / Decimal 等兜底转字符串
+            ensure_ascii=False,  # 支持中文
+            default=str,  # datetime / Decimal 等兜底转字符串
         )
     except Exception as e:
         # 理论上不会发生，但作为最后保险
@@ -70,3 +72,4 @@ def serialize_result(result: Any) -> str:
             {"_serialize_error": str(e)},
             ensure_ascii=False
         )
+

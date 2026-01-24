@@ -6,17 +6,16 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-from app.core import settings
+from app.core.config import config_manager
 from app.utils.log import logger
 
-engine = create_engine(settings.DATABASE_URL)
+engine = create_engine(config_manager.get().DATABASE_URL)
 SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,
     bind=engine,
     expire_on_commit=False
 )
-
 Base = declarative_base()
 
 

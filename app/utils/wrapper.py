@@ -16,6 +16,7 @@ def task_monitor(func):
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        from app.scheduler import find_func
         func_name = func.__name__
         start_time = datetime.now()
         start_perf = time.perf_counter()
@@ -35,7 +36,10 @@ def task_monitor(func):
             end_perf = time.perf_counter()
             end_time = datetime.now()
             duration = int(end_perf - start_perf)
-            task_log = TaskLog(task_func=func_name,
+            f = find_func(func_name)
+            task_log = TaskLog(
+                               task_name=f['func_label'],
+                               task_func=func_name,
                                start_time=start_time,
                                end_time=end_time,
                                execute_seconds=duration,

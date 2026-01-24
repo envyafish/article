@@ -2,17 +2,19 @@ import time
 
 import qbittorrentapi
 
+from app.enum import DownloadClientEnum
+from app.modules.downloadclient.base import BaseDownloader
 from app.utils.log import logger
 
 
-class QBitTorrentClient:
-    client = None
+class QBitTorrentClient(BaseDownloader):
     config: dict = None
+    name = DownloadClientEnum.QBITTORRENT.value
     anti_leech: bool = True
+    client: qbittorrentapi.Client = None
 
     def __init__(self, conf):
         self.config = conf
-        self.login_qb()
 
     def login_qb(self):
         if self.config.get('url') and self.config.get('username') and self.config.get('password'):

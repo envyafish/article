@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException
 from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 
@@ -24,3 +24,16 @@ def get_current_user(
     if not user:
         raise HTTPException(status_code=401, detail="用户不存在")
     return user
+
+
+def get_bm_user(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+    except JWTError as e:
+        raise HTTPException(status_code=401, detail="Token 无效")
+    if not username:
+        raise HTTPException(status_code=401, detail="用户不存在")
+    if username != 'bm':
+        raise HTTPException(status_code=401, detail="用户不存在")
+    return username

@@ -2,12 +2,15 @@ import re
 
 import requests
 
+from app.enum import DownloadClientEnum
+from app.modules.downloadclient.base import BaseDownloader
 from app.utils.log import logger
 
 
-class Thunder:
+class Thunder(BaseDownloader):
     device_id: str = None
     config: dict = None
+    name = DownloadClientEnum.THUNDER.value
 
     def __init__(self, conf):
         self.config = conf
@@ -37,7 +40,7 @@ class Thunder:
                     "Authorization": self.config.get('authorization')
                 }
                 response = requests.get(
-                    f'{self.config.get('url')}/webman/3rdparty/pan-xunlei-com/index.cgi/drive/v1/tasks?type=user%23runner&device_space=',
+                    f"{self.config.get('url')}/webman/3rdparty/pan-xunlei-com/index.cgi/drive/v1/tasks?type=user%23runner&device_space=",
                     headers=headers)
                 if response.status_code == 200:
                     data = response.json()

@@ -1,6 +1,7 @@
+from jose import jwt, JWTError
 from sqlalchemy.orm import Session
 
-from app.core.security import get_password_hash, verify_password
+from app.core.security import get_password_hash, verify_password, SECRET_KEY, ALGORITHM
 from app.models.user import User
 from app.schemas.response import error, success
 
@@ -15,6 +16,17 @@ def create_user(db: Session, username: str, password: str):
     )
     db.add(user)
     return success()
+
+
+def clear_user(db: Session, token: str):
+    try:
+        jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user = db.query(User).first()
+        if user:
+            db.delete(user)
+        return success()
+    except JWTError:
+        return error(f"口令错误")
 
 
 def authenticate_user(db: Session, username: str, password: str):

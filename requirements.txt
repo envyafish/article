@@ -16,3 +16,6 @@ qbittorrent-api
 transmission_rpc
 protobuf
 grpcio
+python-multipart
+argon2_cffi
+telebot

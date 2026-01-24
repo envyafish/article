@@ -7,7 +7,7 @@ import bencoder
 import hashlib
 import binascii
 
-from app.core import settings
+from app.core.config import config_manager
 from app.utils.log import logger
 
 
@@ -93,14 +93,10 @@ def extract_bracket_content(html_content):
         return None
 
 
-
-
 class SHT:
-    proxy: str = None
-    proxies = {}
     headers = {}
     cookie = {}
-    flare_solver = None
+
 
     def __init__(self):
         ua = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.5 Mobile/15E148 Safari/604.1"
@@ -110,14 +106,14 @@ class SHT:
         self.cookie = {
             '_safe': ''
         }
-        self.proxies = {
-            "http": settings.PROXY,
-            "https": settings.PROXY
-        }
-        self.flare_solver = settings.FLARE_SOLVERR_URL
+
 
     def get_original(self, url):
-        res = requests.get(url, proxies=self.proxies, cookies=self.cookie, headers=self.headers,
+        proxies = {
+            "http": config_manager.get().PROXY,
+            "https": config_manager.get().PROXY
+        }
+        res = requests.get(url, proxies=proxies, cookies=self.cookie, headers=self.headers,
                            allow_redirects=True, timeout=10, impersonate="chrome110")
         html = res.text.encode('utf-8')
         doc = pq(html)
@@ -148,10 +144,10 @@ class SHT:
             "cmd": "request.get",
             "url": url,
             "maxTimeout": 60000,
-            "proxy": {"url": self.proxies['http']},
+            "proxy": {"url": config_manager.get().PROXY},
             "cookies": [{"name": k, "value": v} for k, v in self.cookie.items()]
         }
-        res = requests.post(self.flare_solver, headers={"Content-Type": "application/json"}, json=payload)
+        res = requests.post(config_manager.get().FLARE_SOLVERR_URL, headers={"Content-Type": "application/json"}, json=payload)
         result = res.json()
         if result['solution']['status'] != 200:
             return None
@@ -164,10 +160,14 @@ class SHT:
         return html
 
     def bypass_r18(self, html, url):
+        proxies = {
+            "http": config_manager.get().PROXY,
+            "https": config_manager.get().PROXY
+        }
         safeid = extract_safeid(html)
         if safeid:
             self.cookie['_safe'] = safeid
-            res = requests.get(url, proxies=self.proxies, cookies=self.cookie, headers=self.headers,
+            res = requests.get(url, proxies=proxies, cookies=self.cookie, headers=self.headers,
                                allow_redirects=True, timeout=10, impersonate="chrome110")
             html = res.text.encode('utf-8')
             doc = pq(html)
@@ -214,7 +214,7 @@ class SHT:
                 if magnet:
                     date = extract_exact_datetime(html)
                     size = extract_and_convert_video_size(html)
-                    sub_type = extract_bracket_content(html)
+                    category = extract_bracket_content(html)
                     title = doc('h2.n5_bbsnrbt').text()
                     pattern = r"^\[.*?\]"
                     title = re.sub(pattern, "", title).strip()
@@ -226,7 +226,7 @@ class SHT:
                             img_src_list.append(src.strip())
                     return {
                         "title": title,
-                        "sub_type": sub_type,
+                        "category": category,
                         "publish_date": date,
                         "magnet": magnet,
                         "preview_images": ",".join(img_src_list),
@@ -237,6 +237,10 @@ class SHT:
         return {}
 
     def parse_torrent_get_magnet(self, refer, torrent_source, is_local=False):
+        proxies = {
+            "http": config_manager.get().PROXY,
+            "https": config_manager.get().PROXY
+        }
         try:
             torrent_bin = None
             if is_local:
@@ -250,7 +254,7 @@ class SHT:
                 header['Referer'] = refer
                 resp = requests.get(
                     torrent_source,
-                    proxies=self.proxies,
+                    proxies=proxies,
                     cookies=self.cookie,
                     headers=header,
                     allow_redirects=True,
@@ -264,7 +268,6 @@ class SHT:
                     return None
 
             torrent_dict = bencoder.decode(torrent_bin)
-            info_dict = None
             if b"info" in torrent_dict:
                 info_dict = torrent_dict[b"info"]
             elif "info" in torrent_dict:
@@ -301,5 +304,3 @@ class SHT:
 
 
 sht = SHT()
-
-

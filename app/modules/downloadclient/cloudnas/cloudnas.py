@@ -4,12 +4,15 @@ from urllib.parse import unquote
 import requests
 
 from app import utils
+from app.enum import DownloadClientEnum
+from app.modules.downloadclient.base import BaseDownloader
 from app.modules.downloadclient.cloudnas import clouddrive_pb2
 from app.utils.log import logger
 
 
-class CloudNas:
+class CloudNas(BaseDownloader):
     config: dict = None
+    name = DownloadClientEnum.CLOUDDRIVE.value
 
     def __init__(self, conf):
         self.config = conf

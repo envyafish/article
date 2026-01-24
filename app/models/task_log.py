@@ -10,6 +10,7 @@ class TaskLog(Base):
     __table_args__ = {"schema": "sht"}
 
     id: int = Column(BigInteger, primary_key=True, autoincrement=True, index=True)
+    task_name: str = Column(VARCHAR(255), nullable=True)
     task_func: str = Column(VARCHAR(255), nullable=False)
     start_time: datetime = Column(DateTime, nullable=False)
     end_time: datetime = Column(DateTime, nullable=False)

@@ -19,7 +19,7 @@ class Article(Base):
     detail_url: str = Column(String(255))
     size: int = Column(Integer())
     section: str = Column(String(255), nullable=False)
-    sub_type: str = Column(String(255))
+    category: str = Column(String(255))
     create_time: datetime = Column(DateTime(timezone=True), server_default=func.now())
     update_time: datetime = Column(DateTime(timezone=True), onupdate=func.now())
 

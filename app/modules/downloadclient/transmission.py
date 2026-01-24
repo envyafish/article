@@ -3,12 +3,15 @@ import time
 import transmission_rpc
 
 from app import utils
+from app.enum import DownloadClientEnum
+from app.modules.downloadclient.base import BaseDownloader
 from app.utils.log import logger
 
 
-class TransmissionClient:
-    client = None
+class TransmissionClient(BaseDownloader):
     config: dict = None
+    name = DownloadClientEnum.TRANSMISSION.value
+    client: transmission_rpc.Client = None
     anti_leech: bool = True
 
     def __init__(self, conf):

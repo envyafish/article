@@ -1,0 +1,33 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    container_name: article-web
+    ports:
+      - "8000:8000"
+    environment:
+      DOCKER_ENV: "true"
+      TZ: Asia/Shanghai
+      DATABASE_URL: postgresql://yufulings:YUFUllings1984@postgtes:5432/postgres
+    depends_on:
+      - poatgres
+     volumes:
+       - ./app:/app/app           # 如需开发时代码热更，可解除注释
+       - ./frontend/dist:/frontend/dist
+    restart: always
+
+  postges:
+    image: postgres:15
+    container_name: article-db
+    environment:
+      POSTGRES_USER: yufulings
+      POSTGRES_PASSWORD: YUFUllings1984        # 强烈建议生产环境改强密码
+      POSTGRES_DB: postgres
+      TZ: Asia/Shanghai
+    ports:
+      - "55432:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

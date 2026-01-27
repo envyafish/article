@@ -33,7 +33,7 @@ class CloudNas(BaseDownloader):
                     "X-User-Agent": "grpc-python/1.0",
                     "X-Grpc-Web": "1",
                 }
-                url = f"{self.url.rstrip()}/clouddrive.CloudDriveFileSrv/GetToken"
+                url = f"{self.config.get('url').rstrip('/')}/clouddrive.CloudDriveFileSrv/GetToken"
                 response = requests.post(url, data=payload, headers=headers)
                 raw_response = response.content
                 if len(raw_response) >= 5:
@@ -43,7 +43,7 @@ class CloudNas(BaseDownloader):
                     jwt_token = clouddrive_pb2.JWTToken()
                     jwt_token.ParseFromString(message_bytes)
                     if jwt_token.success:
-                        logger.info(f"获取CD2 token成功：{utils.encrypt_first_half(jwt_token.token)}")
+                        logger.info(f"获取CD2 token成功")
                         return jwt_token.token
                 logger.error("获取CD2 token失败")
             except Exception as e:
@@ -67,7 +67,7 @@ class CloudNas(BaseDownloader):
                     "X-Grpc-Web": "1",  # 关键：告诉服务器你是 grpc-web 客户端
                     "Authorization": "Bearer " + token,
                 }
-                url = f"{self.config.get('url')}/clouddrive.CloudDriveFileSrv/AddOfflineFiles"
+                url = f"{self.config.get('url').rstrip('/')}/clouddrive.CloudDriveFileSrv/AddOfflineFiles"
                 try:
                     response = requests.post(url, data=payload, headers=headers)
                     if response.headers:

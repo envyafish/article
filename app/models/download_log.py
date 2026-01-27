@@ -7,7 +7,6 @@ from app.core.database import Base
 
 class DownloadLog(Base):
     __tablename__ = "download_log"
-    __table_args__ = {"schema": "sht"}
 
     id: int = Column(BigInteger, primary_key=True, autoincrement=True, index=True)
     tid: int = Column(BigInteger)

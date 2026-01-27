@@ -9,7 +9,6 @@ from app.utils import dict_trans_obj
 
 class Article(Base):
     __tablename__ = "article"
-    __table_args__ = {"schema": "sht"}
 
     tid: str = Column(Integer, nullable=False, primary_key=True)
     title: str = Column(String(255), nullable=False)

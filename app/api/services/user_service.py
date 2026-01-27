@@ -44,3 +44,7 @@ def update_user(db: Session, username: str, password: str):
     user.hashed_password = get_password_hash(password)
     db.flush()
     return success()
+
+
+
+

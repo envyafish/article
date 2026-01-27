@@ -7,7 +7,6 @@ from app.core.database import Base
 
 class TaskLog(Base):
     __tablename__ = "task_log"
-    __table_args__ = {"schema": "sht"}
 
     id: int = Column(BigInteger, primary_key=True, autoincrement=True, index=True)
     task_name: str = Column(VARCHAR(255), nullable=True)

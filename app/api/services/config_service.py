@@ -38,6 +38,13 @@ def get_option(key, db: Session):
     return success()
 
 
+def delete_option(key, db: Session):
+    config = db.query(Config).filter(Config.key == key).first()
+    if config:
+        db.delete(config)
+    return success()
+
+
 def list_all_downloader(db: Session):
     configs = db.query(Config).filter(Config.key.ilike('Downloader.%')).all()
     downloaders = []

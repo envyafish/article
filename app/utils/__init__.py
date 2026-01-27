@@ -1,4 +1,6 @@
 import json
+import secrets
+import string
 from datetime import date, datetime
 from typing import Dict, get_origin, get_args, Union, Any
 from urllib.parse import urlparse
@@ -73,3 +75,9 @@ def serialize_result(result: Any) -> str:
             ensure_ascii=False
         )
 
+
+
+def generate_secure_random_string(length: int) -> str:
+    # 选择字符集（包括字母和数字）
+    characters = string.ascii_letters + string.digits
+    return ''.join(secrets.choice(characters) for _ in range(length))

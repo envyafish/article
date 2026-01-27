@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from starlette.templating import Jinja2Templates
 
-from app.api.deps import get_current_user, get_bm_user
+from app.api.deps import get_current_user, api_key_or_jwt
 from app.api.services import article_service
 from app.core.config import root_path
 from app.core.database import get_db
@@ -24,7 +24,7 @@ def get_category(db: Session = Depends(get_db), user: User = Depends(get_current
 
 
 @router.get("/torrents")
-def get_torrent(keyword, db: Session = Depends(get_db), bm: str = Depends(get_bm_user)):
+def get_torrent(keyword, db: Session = Depends(get_db), auth=Depends(api_key_or_jwt)):
     return article_service.get_torrents(keyword, db)
 
 

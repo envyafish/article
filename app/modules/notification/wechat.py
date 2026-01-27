@@ -15,7 +15,7 @@ class WeChatNotifier(BaseSender):
 
     def get_access_token(self):
         if self.conf.get('corp_id') and self.conf.get('corp_secret') and self.conf.get('agent_id'):
-            url = f"{self.conf.get('proxy', 'https://qyapi.weixin.qq.com')}/cgi-bin/gettoken?corpid={self.conf.get('corp_id')}&corpsecret={self.conf.get('corp_secret')}"
+            url = f"{self.conf.get('proxy', 'https://qyapi.weixin.qq.com').rstrip('/')}/cgi-bin/gettoken?corpid={self.conf.get('corp_id')}&corpsecret={self.conf.get('corp_secret')}"
             try:
                 response = requests.get(url)
                 response_data = response.json()
@@ -30,7 +30,7 @@ class WeChatNotifier(BaseSender):
     def send(self, title=None, message=None, image_url=None):
         if self.conf.get('corp_id') and self.conf.get('corp_secret') and self.conf.get('agent_id'):
             access_token = self.get_access_token()
-            url = f"{self.conf.get('proxy', 'https://qyapi.weixin.qq.com')}/cgi-bin/message/send?access_token={access_token}"
+            url = f"{self.conf.get('proxy', 'https://qyapi.weixin.qq.com').rstrip('/')}/cgi-bin/message/send?access_token={access_token}"
             payload = {
                 "touser": self.conf.get('to_user'),
                 "msgtype": "news",

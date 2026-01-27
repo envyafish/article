@@ -7,7 +7,6 @@ from app.core.database import Base
 
 class User(Base):
     __tablename__ = "user"
-    __table_args__ = {"schema": "sht"}
 
     id: int = Column(BigInteger, primary_key=True, autoincrement=True, index=True)
 

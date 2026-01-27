@@ -1,1 +1,0 @@
-import{r as a}from"./request-CKtXVA2v.js";function n(r){return a({url:"/articles/search",method:"post",data:r})}function s(){return a({url:"/articles/categories"})}function l(r){return a({url:"/articles/download",params:{tid:r}})}function u(r,t,e){return a({url:"/articles/download/manul",params:{tid:r,downloader:t,save_path:e}})}export{n as a,l as d,s as g,u as m};

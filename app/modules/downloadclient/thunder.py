@@ -18,7 +18,7 @@ class Thunder(BaseDownloader):
 
     def get_pan_auth(self):
         try:
-            index_url = f"{self.config.get('url')}/webman/3rdparty/pan-xunlei-com/index.cgi/"
+            index_url = f"{self.config.get('url').rstrip('/')}/webman/3rdparty/pan-xunlei-com/index.cgi/"
             headers = {
                 "Authorization": self.config.get('authorization')
             }
@@ -40,7 +40,7 @@ class Thunder(BaseDownloader):
                     "Authorization": self.config.get('authorization')
                 }
                 response = requests.get(
-                    f"{self.config.get('url')}/webman/3rdparty/pan-xunlei-com/index.cgi/drive/v1/tasks?type=user%23runner&device_space=",
+                    f"{self.config.get('url').rstrip('/')}/webman/3rdparty/pan-xunlei-com/index.cgi/drive/v1/tasks?type=user%23runner&device_space=",
                     headers=headers)
                 if response.status_code == 200:
                     data = response.json()
@@ -58,7 +58,7 @@ class Thunder(BaseDownloader):
     def analyze_size(self, magnet):
         if self.config.get('url'):
             try:
-                list_url = f"{self.config.get('url')}/webman/3rdparty/pan-xunlei-com/index.cgi/drive/v1/resource/list"
+                list_url = f"{self.config.get('url').rstrip('/')}/webman/3rdparty/pan-xunlei-com/index.cgi/drive/v1/resource/list"
                 data = {
                     "page_size": 1000,
                     "urls": magnet
@@ -82,7 +82,7 @@ class Thunder(BaseDownloader):
     def download(self, magnet,file_id):
         if self.config.get('url') and self.device_id:
             try:
-                list_url = f"{self.config.get('url')}/webman/3rdparty/pan-xunlei-com/index.cgi/drive/v1/resource/list"
+                list_url = f"{self.config.get('url').rstrip('/')}/webman/3rdparty/pan-xunlei-com/index.cgi/drive/v1/resource/list"
                 data = {
                     "page_size": 1000,
                     "urls": magnet

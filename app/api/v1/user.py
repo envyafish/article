@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from fastapi import Depends,  APIRouter
+from fastapi import Depends, APIRouter
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -25,7 +25,7 @@ def login(
     if not user:
         return error("用户名或密码错误")
     token = create_access_token({"sub": user.username})
-    return success({"access_token": token})
+    return success({"access_token": token, "username": user.username})
 
 
 @router.post("/")

@@ -9,7 +9,15 @@ from sqlalchemy.orm import sessionmaker
 from app.core.config import config_manager
 from app.utils.log import logger
 
-engine = create_engine(config_manager.get().DATABASE_URL)
+postgres_host = config_manager.get().POSTGRES_HOST
+postgres_port = config_manager.get().POSTGRES_PORT
+postgres_user = config_manager.get().POSTGRES_USER
+postgres_password = config_manager.get().POSTGRES_PASSWORD
+postgres_database = config_manager.get().POSTGRES_DB
+
+
+database_url = config_manager.get().DATABASE_URL or f"postgresql://{postgres_user}:{postgres_password}@{postgres_host}:{postgres_port}/{postgres_database}"
+engine = create_engine(database_url)
 SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,

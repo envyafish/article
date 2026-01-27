@@ -67,8 +67,8 @@ def sync_new_article(fid, start_page=1, max_page=100):
                        .scalar() or 0
 
     logger.info(f"[{section}] 数据库最大TID: {stop_tid}")
-    articles = []
     while page <= max_page:
+        articles = []
         time.sleep(1)
         logger.info(f"[{section}] 抓取第 {page} 页")
         tid_list = []
@@ -124,14 +124,14 @@ def sync_new_article(fid, start_page=1, max_page=100):
                 except Exception as e:
                     logger.error(f"TID {tid} 抓取失败: {e}")
                     fail_id_list.append(tid)
-
+            with session_scope() as session:
+                session.add_all(articles)
             # 终止条件
             if min_tid <= stop_tid:
                 logger.info(f"[{section}] 已到达历史最大TID，任务结束")
                 break
             page += 1
-    with session_scope() as session:
-        session.add_all(articles)
+
     retry_fail_id_list = retry_fail_tid(fid, fail_id_list)
     return success_count, page, retry_fail_id_list
 
@@ -142,11 +142,12 @@ def sync_new_article_no_stop(fid, start_page=1, max_page=100):
     fail_id_list = []
     page = start_page
     success_count = 0
-    articles = []
     while page <= max_page:
         time.sleep(1)
         logger.info(f"[{section}] 抓取第 {page} 页")
         tid_list = []
+        articles = []
+
         # 页面级重试
         for retry in range(3):
             tid_list = sht.crawler_tid_list(
@@ -196,9 +197,10 @@ def sync_new_article_no_stop(fid, start_page=1, max_page=100):
                 except Exception as e:
                     logger.error(f"TID {tid} 抓取失败: {e}")
                     fail_id_list.append(tid)
+            with session_scope() as session:
+                session.add_all(articles)
             page += 1
-    with session_scope() as session:
-        session.add_all(articles)
+
     retry_fail_id_list = retry_fail_tid(fid, fail_id_list)
     return success_count, page, retry_fail_id_list
 

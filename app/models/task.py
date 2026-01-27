@@ -7,7 +7,6 @@ from app.core.database import Base
 
 class Task(Base):
     __tablename__ = "task"
-    __table_args__ = {"schema": "sht"}
 
     id: int = Column(BigInteger, primary_key=True, autoincrement=True, index=True)
     task_name: str = Column(String(32), nullable=False)

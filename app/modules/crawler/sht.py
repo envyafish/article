@@ -96,6 +96,7 @@ def extract_bracket_content(html_content):
 class SHT:
     headers = {}
     cookie = {}
+    domain = 'https://sehuatang.org'
 
 
     def __init__(self):
@@ -210,7 +211,7 @@ class SHT:
                     torrent = doc("a:contains('.torrent')").eq(0)
                     if torrent:
                         torrent_url = torrent.attr('href')
-                        magnet = self.parse_torrent_get_magnet(url, f"https://sehuatang.org/{torrent_url}")
+                        magnet = self.parse_torrent_get_magnet(url, f"{self.domain}/{torrent_url}")
                 if magnet:
                     date = extract_exact_datetime(html)
                     size = extract_and_convert_video_size(html)

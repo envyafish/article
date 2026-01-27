@@ -1,0 +1,18 @@
+services:
+  article:
+    image: article:latest
+    container_name: article
+    network_mode: bridge
+
+    ports:
+      - 8000:8000
+    volumes:
+      - ./data:/data
+    environment:
+      - DATABASE_URL=<postgresql://{user}:{password}@{host}:{port}/{db}>
+#      数据库配置二选一即可
+      - POSTGRES_HOST=<HOST>
+      - POSTGRES_PORT=<PORT>
+      - POSTGRES_USER=<USER>
+      - POSTGRES_PASSWORD=<PASSWORD>
+      - POSTGRES_DB=<DB>

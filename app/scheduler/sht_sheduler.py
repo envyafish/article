@@ -75,7 +75,7 @@ def sync_new_article(fid, start_page=1, max_page=100):
         # 页面级重试
         for retry in range(3):
             tid_list = sht.crawler_tid_list(
-                f"https://sehuatang.org/forum.php?mod=forumdisplay&fid={fid}&mobile=2&page={page}"
+                f"{sht.domain}/forum.php?mod=forumdisplay&fid={fid}&mobile=2&page={page}"
             )
             if tid_list:
                 break
@@ -151,7 +151,7 @@ def sync_new_article_no_stop(fid, start_page=1, max_page=100):
         # 页面级重试
         for retry in range(3):
             tid_list = sht.crawler_tid_list(
-                f"https://sehuatang.org/forum.php?mod=forumdisplay&fid={fid}&mobile=2&page={page}"
+                f"{sht.domain}/forum.php?mod=forumdisplay&fid={fid}&mobile=2&page={page}"
             )
             if tid_list:
                 break
@@ -214,8 +214,7 @@ def retry_fail_tid(fid, fail_id_list):
     articles = []
     for tid in fail_id_list[:]:
         detail_url = (
-            f"https://sehuatang.org/forum.php?"
-            f"mod=viewthread&tid={tid}&extra=page%3D1&mobile=2"
+            f"{sht.domain}/forum.php?mod=viewthread&tid={tid}&extra=page%3D1&mobile=2"
         )
         try:
             data = sht.crawler_detail(detail_url)

@@ -1,0 +1,47 @@
+name: Build and Push Docker Image with Auto Tag
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # 必须，否则读不到 tag
+
+      # 🔹 自动计算版本号
+      - name: Generate version
+        id: version
+        uses: paulhatch/semantic-version@v5
+        with:
+          tag_prefix: "v"
+          major_pattern: "BREAKING CHANGE"
+          minor_pattern: "feat"
+          format: "${major}.${minor}.${patch}"
+
+      - name: Show version
+        run: |
+          echo "Version: v${{ steps.version.outputs.version }}"
+
+      # 🔹 登录 Docker Hub
+      - name: Login Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # 🔹 构建并推送（两个 tag）
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/article:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/article:v${{ steps.version.outputs.version }}

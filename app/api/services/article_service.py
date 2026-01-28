@@ -229,6 +229,7 @@ def manul_download(tid, downloader, save_path):
         article = db.get(Article, tid)
     is_success = download_magnet(article.tid, article.magnet, downloader, save_path)
     if is_success:
+        pushManager.send(convert_message_data(article, downloader, save_path))
         return success(message="成功创建下载任务")
     return error("创建下载任务失败")
 

@@ -15,17 +15,21 @@ class PushManager:
     def register(self, sender: BaseSender):
         self.senders.append(sender)
 
-    def send(self, data: dict):
+    def send(self, data: dict | str, with_template: bool = True, title: str = None, image_url: str = None):
         for sender in self.senders:
             if sender.conf.get('enable'):
-                message = Template(sender.conf.get('template')).render(**data)
+                if with_template:
+                    message = Template(sender.conf.get('template')).render(**data)
+                    title = data.get('title')
+                    image_url = data.get('image')
+                else:
+                    message = data
                 try:
-                    sender.send(data.get('title'), message, data.get('image'))
+                    sender.send(title, message, image_url)
                 except Exception as e:
                     logging.exception(
                         f"推送失败:{sender.name}{e}"
                     )
-
 
     def reload(self, name, config: dict):
         for sender in self.senders:

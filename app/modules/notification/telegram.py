@@ -49,9 +49,13 @@ class TelegramNotifier(BaseSender):
     def send(self, title=None, message=None, image_url=None):
         if self.bot:
             try:
-                self.bot.send_photo(self.conf.get('chat_id'),
-                                    photo=get_image(image_url) if self.conf.get('push_image') else None,
-                                    has_spoiler=self.conf.get('spoiler', False),
-                                    caption=message)
+                if image_url:
+                    self.bot.send_photo(self.conf.get('chat_id'),
+                                        photo=get_image(image_url) if self.conf.get('push_image') else None,
+                                        has_spoiler=self.conf.get('spoiler', False),
+                                        caption=message)
+                else:
+                    message = f"{title}\n{message}"
+                    self.bot.send_message(self.conf.get('chat_id'), message)
             except Exception as e:
                 logger.error(f"发送telegram消息失败： {e}")
